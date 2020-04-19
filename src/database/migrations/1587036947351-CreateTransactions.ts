@@ -29,16 +29,18 @@ export default class CreateTransactions1587036947351
           },
           {
             name: 'value',
-            type: 'float',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
           },
           {
             name: 'type',
-            type: 'enum',
-            enum: ['income', 'outcome'],
+            type: 'varchar',
           },
           {
             name: 'category_id',
             type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'created_at',

@@ -7,17 +7,16 @@ import CreateTransactionService from '../services/CreateTransactionService';
 import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
 
-const upload = multer();
+import uploadConfig from '../config/upload';
+
+const upload = multer(uploadConfig);
 
 const transactionsRouter = Router();
 
 transactionsRouter.get('/', async (request, response) => {
   const transactionsRepository = getCustomRepository(TransactionsRepository);
 
-  const transactions = await transactionsRepository.find({
-    // join: { alias: 'category' },
-    select: ['id', 'title', 'value', 'type', 'category_id'],
-  });
+  const transactions = await transactionsRepository.find();
 
   const balance = await transactionsRepository.getBalance();
 
@@ -53,11 +52,11 @@ transactionsRouter.post(
   '/import',
   upload.single('file'),
   async (request, response) => {
-    const { buffer } = request.file;
+    const { path } = request.file;
 
     const importTransaction = new ImportTransactionsService();
 
-    const transactions = await importTransaction.execute({ buffer });
+    const transactions = await importTransaction.execute({ path });
 
     return response.json(transactions);
   },
